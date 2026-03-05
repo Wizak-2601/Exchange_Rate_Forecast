@@ -1,0 +1,7 @@
+model_type,val_smape,test_smape,name,seq_len,pred_len,n_heads,dropout,d_model,enc_layers,model_smape,naive_smape,beats_naive
+ARIMA,0.6244915266626219,0.7054108053298362,,,,,,,,,,
+transformer,,,transformer_s192_p199_h4_k23_d0.1,192.0,199.0,4.0,0.1,64.0,2.0,0.1872616851081451,1.6775708198547363,True
+transformer,,,transformer_s192_p199_h5_k23_d0.1,192.0,199.0,5.0,0.1,80.0,2.0,0.21044896667202315,1.6775708198547363,True
+transformer,,,transformer_s256_p199_h5_k23_d0.1,256.0,199.0,5.0,0.1,80.0,2.0,0.2088224969804287,1.7080833911895752,True
+transformer,,,transformer_s256_p199_h5_k23_d0.2,256.0,199.0,5.0,0.2,80.0,2.0,0.21151563748717309,1.7080833911895752,True
+transformer,,,transformer_s256_p199_h5_k23_d0.2,256.0,199.0,5.0,0.2,80.0,2.0,0.40245586931705474,1.6150233745574951,True

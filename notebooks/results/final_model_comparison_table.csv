@@ -1,0 +1,5 @@
+model_type,val_smape,test_smape,name,seq_len,pred_len,n_heads,dropout,d_model,enc_layers
+ARIMA,0.6244915266626219,0.7054108053298362,ARIMA,,,,,,
+transformer,0.1872616851081451,0.4625378229278833,transformer_s192_p199_h4_k23_d0.1,192.0,199.0,4.0,0.1,64.0,2.0
+informer,0.2056111946702003,0.4326074478259079,informer_s96_p199_h3_k23_d0.1,96.0,199.0,3.0,0.1,60.0,2.0
+autoformer,0.1802040636539459,0.43486388016711264,autoformer_s96_p199_h5_k23_d0.2,96.0,199.0,5.0,0.2,80.0,2.0

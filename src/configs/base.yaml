@@ -1,0 +1,25 @@
+model_type: autoformer
+
+data:
+  seq_len: 96
+  pred_len: 24
+  univariate: false
+  use_lags: false
+
+model:
+  d_model: 64
+  n_heads: 4
+  enc_layers: 2
+  dropout: 0.1
+  kernel_size: 23
+
+training:
+  batch_size: 16
+  lr: 0.0001
+  epochs: 20
+  patience: 5
+  residual: true
+
+misc:
+  seed: 42
+  # save_path: "results/saved_models/model.pth"
