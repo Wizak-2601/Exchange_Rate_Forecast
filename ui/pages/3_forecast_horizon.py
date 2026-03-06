@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.graph_objects as go
 from utils.load_data import load_forecast
 
-st.title("Forecast Visualization")
+st.title("Forecast Horizon")
 
 forecast = load_forecast()
 
