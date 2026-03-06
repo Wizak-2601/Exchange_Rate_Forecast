@@ -1,0 +1,10 @@
+torch
+pandas
+numpy
+PyYAML
+matplotlib
+statsmodels
+datasets
+streamlit
+plotly
+jupyter
