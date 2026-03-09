@@ -4,14 +4,9 @@ from utils.load_data import load_forecast
 
 st.title("Forecast Horizon")
 
-forecast = load_forecast()
-
-
-
-
 horizon = st.sidebar.selectbox(
     "Forecast Horizon",
-    ["24", "96", "199"]
+    ["24", "96", "199", "366"]
 )
 
 models = ["autoformer","informer","transformer"]
@@ -21,6 +16,8 @@ selected_models = st.sidebar.multiselect(
     models,
     default=["autoformer"]
 )
+
+forecast = load_forecast(horizon=int(horizon))
 
 fig = go.Figure()
 
@@ -74,7 +71,7 @@ for model in selected_models:
 
 fig.update_layout(
     template="plotly_dark",
-    title="Forecast vs Actual",
+    title=f"Forecast vs Actual (Horizon {horizon})",
     xaxis_title="Time",
     yaxis_title="Exchange Rate",
     hovermode="x unified",
@@ -85,24 +82,42 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.subheader("Uncertainty Calibration")
 
-forecast["error"] = abs(
-    forecast["actual"] - forecast["autoformer"]
+calibration_model = st.selectbox(
+    "Calibration Model",
+    models,
+    index=models.index(selected_models[0]) if selected_models else 0
+)
+
+upper_col = f"{calibration_model}_upper"
+lower_col = f"{calibration_model}_lower"
+
+calibration_df = forecast.dropna(
+    subset=["actual", calibration_model, upper_col, lower_col]
+).copy()
+
+calibration_df["error"] = abs(
+    calibration_df["actual"] - calibration_df[calibration_model]
+)
+calibration_df["interval_width"] = (
+    calibration_df[upper_col] - calibration_df[lower_col]
 )
 
 fig2 = go.Figure()
 
 fig2.add_trace(
     go.Scattergl(
-        x=forecast["autoformer_upper"] - forecast["autoformer_lower"],
-        y=forecast["error"],
-        mode="markers"
+        x=calibration_df["interval_width"],
+        y=calibration_df["error"],
+        mode="markers",
+        name=calibration_model.capitalize()
     )
 )
 
 fig2.update_layout(
     template="plotly_dark",
     xaxis_title="Prediction Interval Width",
-    yaxis_title="Absolute Error"
+    yaxis_title="Absolute Error",
+    title=f"Uncertainty Calibration: {calibration_model.capitalize()}"
 )
 
 st.plotly_chart(fig2, use_container_width=True)

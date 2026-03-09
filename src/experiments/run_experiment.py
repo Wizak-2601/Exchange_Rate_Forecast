@@ -6,6 +6,12 @@ from src.models.build import build_model
 from src.training.train import train_model
 from src.evaluation.naive import compute_naive
 from src.evaluation.arima import arima_multivariate
+from src.data.normalization import fit_scaler,transform_data
+from src.data.lag_features import add_lags
+from pathlib import Path
+
+
+PROJECT_ROOT=Path(__file__).resolve().parents[2]
 def run_experiment(config):
 
     device = torch.device("mps" if torch.mps.is_available() else "cpu")
@@ -13,7 +19,21 @@ def run_experiment(config):
     train_data, val_data,_ = load_exchange_data(
         univariate=config["univariate"]
     )
+    scaler_path = PROJECT_ROOT / "results" / "scalers" / f"{config["model_type"]}_scaler.pkl"
+    if config.get("use_lags", False):
 
+        train_data = add_lags(train_data, config.get("lags", [1,3,7]))
+        val_data   = add_lags(val_data, config.get("lags", [1,3,7]))
+
+
+    if config["use_scaling"]:
+        scaler = fit_scaler(
+            train_data,
+            save_path=scaler_path
+        )
+
+        train_data = transform_data(train_data, scaler)
+        val_data   = transform_data(val_data, scaler)
 
     X_train, Y_train = create_windows(
         train_data,

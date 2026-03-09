@@ -5,6 +5,8 @@ data:
   pred_len: 24
   univariate: false
   use_lags: false
+  use_scaling:true
+  lags:[1,3,7]
 
 model:
   d_model: 64

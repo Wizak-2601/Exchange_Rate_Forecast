@@ -15,7 +15,7 @@ def load_final():
     return pd.read_csv(path)
 
 @st.cache_data
-def load_forecast():
+def load_forecast(horizon=199, max_points=2000):
 
     autoformer=pd.read_csv(PROJECT_ROOT/"notebooks"/"results"/"autoformer_forecast.csv")
     informer=pd.read_csv(PROJECT_ROOT/"notebooks"/"results"/"informer_forecast.csv")
@@ -28,15 +28,23 @@ def load_forecast():
     "transformer": transformer["transformer"],
     "autoformer_upper": autoformer["autoformer_upper"],
     "autoformer_lower": autoformer["autoformer_lower"],
-    "informer_upper":informer["informer_lower"],
+    "informer_upper":informer["informer_upper"],
     "informer_lower":informer["informer_lower"],
     "transformer_upper":transformer["transformer_upper"],
     "transformer_lower":transformer["transformer_lower"]
 })
-# 🔹 Downsample for UI performance
-    max_points = 2000
 
+    # Apply horizon-aware filtering first so toggle has real impact.
+    # Use a fixed visualization cycle (366) so 24/96/199/366 are distinct views.
+    horizon = int(horizon)
+    cycle_window = 366
+    if horizon <= cycle_window:
+        df = df[df["time"] % cycle_window < horizon]
+
+    # Downsample for UI performance.
     if len(df) > max_points:
         step = len(df) // max_points
         df = df.iloc[::step]
+
+    df = df.reset_index(drop=True)
     return df

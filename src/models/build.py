@@ -1,6 +1,6 @@
 from .informer import InformerEncoderOnly
 from .autoformer import AutoformerEncoderOnly
-from.transformer import VanillaTransformer
+from .transformer import VanillaTransformer
 def build_model(config, device):
 
     if config["model_type"] == "informer":
